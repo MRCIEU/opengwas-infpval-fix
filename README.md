@@ -4,7 +4,8 @@
 scripts/fix_vcf.sh \
     /mnt/storage/private/mrcieu/research/scratch/IGD/data/dev/met-d-import/processed \
     met-d-DHA \
-    /mnt/storage/private/mrcieu/research/scratch/IGD/data/dev/opengwas-infpval-fix/met-d
+    /mnt/storage/private/mrcieu/research/scratch/IGD/data/dev/opengwas-infpval-fix/met-d \
+    logs
 ```
 
 
@@ -12,7 +13,7 @@ scripts/fix_vcf.sh \
 
 ```
 snakemake -prk \
--j 400 \
+-j 500 \
 --cluster-config bc4-cluster.json \
 --cluster "sbatch \
   --job-name={cluster.name} \

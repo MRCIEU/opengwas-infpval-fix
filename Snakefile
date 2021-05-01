@@ -58,7 +58,6 @@ rule inf:
 scripts/fix_vcf.sh \
 {input} \
 {wildcards.id} \
-/mnt/storage/private/mrcieu/research/scratch/IGD/data/dev/opengwas-infpval-fix
-
-touch {output}
+/mnt/storage/private/mrcieu/research/scratch/IGD/data/dev/opengwas-infpval-fix \
+logs
 		"""

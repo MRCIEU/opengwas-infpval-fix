@@ -6,7 +6,7 @@
 		"nodes": "1",
 		"ncpu": "1",
 		"ntask": "1",
-		"time": "00:05:00",
+		"time": "00:59:00",
 		"mem": "4G",
 		"output": "job_reports/{rule}.{wildcards.id}.out"
 	}
