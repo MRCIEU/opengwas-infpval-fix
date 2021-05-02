@@ -75,7 +75,6 @@ def update_tophits(id, workdir):
 	print(len(clump))
 	o=[]
 	for rsid in clump:
-		print(rsid)
 		body={
 			"query":{
 				"bool":{
@@ -88,7 +87,7 @@ def update_tophits(id, workdir):
 				}
 			}
 		}
-		res = es.search(index="met-d", body=body)
+		res = es.search(index=index, body=body)
 		if res['hits']['total'] > 0:
 			o.append(res['hits']['hits'][0]['_source'])
 	# 6. Delete the tophits for that dataset
@@ -114,18 +113,20 @@ def del_current_tophits(id):
 	print(id)
 	print(index)
 	print(study)
+	pp.pprint(es.indices.get_settings(index + "-tophits"))
+	es.indices.put_settings(index=index + "-tophits", body={'index.blocks.read_only_allow_delete': None})
+	pp.pprint(es.indices.get_settings(index + "-tophits"))
+	es.indices.refresh(index + "-tophits")
 	body={
 		"query":{
 			"term":{"gwas_id":study}
 		}
 	}
 	o = es.search(index=index+'-tophits', body=body, size=10000)
-	docids = [x['_id'] for x in o['hits']['hits']]
-	print(len(docids))
-	[es.delete(index=index+'-tophits', id=x) for x in docids]
+	print(len(o['hits']['hits']))
+	[es.delete(index=x['_index'], id=x['_id']) for x in o['hits']['hits']]
 
 count=[]
-clump_success=[]
 fix_success=[]
 for id in idlist:
 	print(id)
@@ -139,12 +140,23 @@ for id in idlist:
 	else:
 		fix_success.append({id:True})
 
-	if id in count.keys():
-		if count[id] > 0:
+
+c={}
+for d in count:
+	print(d)
+	c.update(d)
+
+clump_success=[]
+for id in idlist:
+	print(id)
+	if id in c.keys():
+		if c[id] > 0:
 			try:
 				update_tophits(id, workdir)
 			except:
 				clump_success.append({id:False})
 			else:
 				clump_success.append({id:True})
+
+
 
