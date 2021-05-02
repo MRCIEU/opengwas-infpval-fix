@@ -46,8 +46,10 @@ len(id)
 ID = dict(zip(id, VCFIN))
 len(ID)
 
+####
+
 rule all:
-	input: expand('logs/{filename}.out', filename=ID.keys())
+	input: "summary.csv"
 
 rule inf:
 	input: lambda wildcards: ID[wildcards.id]
@@ -61,3 +63,11 @@ scripts/fix_vcf.sh \
 /mnt/storage/private/mrcieu/research/scratch/IGD/data/dev/opengwas-infpval-fix \
 logs
 		"""
+
+rule fix_es:
+	input: expand('logs/{filename}.out', filename=ID.keys())
+	output:
+		"summary.csv"
+	shell:
+		"python scripts/fix_es.py"
+
